@@ -1,99 +1,121 @@
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
+canvas.onclick = function(e) {
+  let xPosition = e.clientX
+  let yPosition = e.clientY
+  bubble.x=xPosition
+  bubble.y=yPosition
+  bubble.draw()
+  console.log(xPosition, yPosition)
+}
 // alert("Hello! I am an alert box!!");
 //const startButton = document.getElementById('start-button')
+
+
 let frames = 0
 let score = 0
 let interval
+let grid = {
+  x: 450,
+  y: 250,
+  height: 800,
+  width: 800,
+  columns: 6,
+  rows: 6,
+  bubblewidth: 70,
+  bubbleheight: 70,
+  topbubbles: []
+}
 
+function changePosition() {
+  canvas.addEventListener('click', getClickPosition, false)
+}
 
-  let grid = {
-    x: 250,          
-    y: 100,          
-    height: 800, 
-    width:800,    
-    columns: 6,    
-    rows: 6,      
-    bubblewidth: 70,  
-    bubbleheight: 70, 
-    topbubbles: []      
+class Topbubble {
+  constructor() {
+    this.width = 70
+    this.height = 70
+    this.color = 'red'
+    this.x = 300
+    this.y = 100
+    this.image = new Image()
+    this.image.src = './assets/green.png'
+    this.image.onload = () => {
+      this.draw()
     }
-
-
-class Topbubble { 
-
- constructor(width, height,color, x, y,){
-    this.width=70
-    this.height=70
-    this.color='red'
-    this.x=100
-    this.y=100
-    
-}
-
- draw(){
-   ctx.fillStyle = this.color
-    ctx.fillRect(this.x, this.y, this.width, this.height)
-     }
-
-
-}
-
-
-function start(){
-  
-}
-
-function updateTopBubbles(){
- for (let i=0; i<grid.columns; i++) {
-  grid.topbubbles[i] = [];
- for (var j=0; j<grid.rows; j++) {
-  grid.topbubbles[i][j] = new Topbubble(i, j, 100,100)
-   }
-        }
- 
   }
 
-function drawTopBubbles(){
- let down=0
-   for (let i=0; i<grid.rows; i++) {
- 
-  grid.topbubbles.forEach(topbubble =>{
-   theTopBubbles.x +=90
-   if(down%5===0){
-   theTopBubbles.y +=90
-   down=0
-   theTopBubbles.x=180
-     }
-  theTopBubbles.draw()
-  down++
-  } )
-  
-   }
-
+  draw() {
+    ctx.drawImage(this.image, this.x, this.y, this.width, this.height)
+    ctx.drawImage(this.image, this.x + canvas.width, this.y, this.width, this.height)
+  }
 }
 
-let theTopBubbles=new Topbubble(0,0,"red",0,0)     
+function updateTopBubbles() {
+  for (let i = 0; i < grid.columns; i++) {
+    grid.topbubbles[i] = []
+    for (let j = 0; j < grid.rows; j++) {
+      grid.topbubbles[i][j] = new Topbubble()
+    }
+  }
+}
+
+function drawTopBubbles() {
+  let down = 0
+
+  for (let a = 0; a < grid.columns; a++) {
+    grid.topbubbles.forEach((topbubble, i) => {
+      topbubble[i].y += 90
+      if (down % 6 === 0) {
+        topbubble[i].x += 90
+        down = 0
+        topbubble[i].y = 180
+      } else {
+        topbubble[i].x += 90
+        topbubble[i].y = 90
+      }
+      topbubble[i].draw()
+      down++
+    })
+  }
+
+  for (let a = 0; a < grid.rows; a++) {
+    grid.topbubbles.forEach((topbubble, j) => {
+      topbubble[a].y += 90
+      if (down % 6 === 0) {
+        topbubble[a].x += 90
+        down = 0
+        topbubble[a].y = 180
+      } else {
+        topbubble[a].x += 90
+        topbubble[a].y = 90
+      }
+      topbubble[a].draw()
+      down++
+    })
+  }
+}
+
+// let theTopBubbles = new Topbubble(0, 0, 0, 0)
 
 function update() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-  // frames++
+  frames++
   clearCanvas()
   start()
   board.draw()
   canon.draw()
   bubble.draw()
-  drawTopBubbles()
   updateTopBubbles()
+  drawTopBubbles()
 }
 
 function start() {
-  interval = setInterval(update, 900 / 60)
-  // console.log(interval)
+  interval = setInterval(update, 1000 / 60)
 }
 
-function clearCanvas() {  
- ctx.clearRect(0, 0, canvas.width, canvas.height)}
+function clearCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+}
 
 class Board {
   constructor() {
@@ -103,13 +125,17 @@ class Board {
     this.height = canvas.height
 
     this.image = new Image()
-    this.image.src = './assets/screen1.jpg'
+    this.image.src = './screen1.png'
     this.image.onload = () => {
       this.draw()
     }
   }
   draw() {
-
+    
+ this.x-=1
+    if (this.x < -canvas.width) {
+      this.x = 0
+    }
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height)
     ctx.drawImage(
       this.image,
@@ -118,11 +144,11 @@ class Board {
       this.width,
       this.height
     )
+
   }
 }
 
 class Canon {
-
   constructor() {
     this.x = 500
     this.y = 630
@@ -133,17 +159,9 @@ class Canon {
     this.image.onload = () => {
       this.draw()
     }
-
   }
   draw() {
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height)
-    ctx.drawImage(
-      this.image,
-      this.x,
-      this.y,
-      this.width,
-      this.height
-    )
   }
 }
 
@@ -167,27 +185,37 @@ class Bubble {
 
     this.image = new Image()
     this.image.src = './assets/purple.png'
-   this.image.onload = () => {
+    this.image.onload = () => {
       this.draw()
-     }
-
-
+    }
   }
 
   draw() {
-
     ctx.drawImage(this.imageGreen, this.x, this.y, this.width, this.height)
-   
   }
-
+  float() {
+    this.y -= 20
+  }
 }
 
+document.onkeydown = e => {
+  switch (e.keyCode) {
+    case 32:
+      bubble.float()
+      break
+    case 13:
+      location.reload()
+      break
+
+    default:
+      break
+  }
+}
 
 const board = new Board()
 const canon = new Canon()
 const bubble = new Bubble()
 
 update()
-
 
 //startButton.onclick=start()
