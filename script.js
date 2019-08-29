@@ -11,7 +11,7 @@ let stars = []
 function update() {
   frames++
   clearCanvas()
-  
+
   board.draw()
   canon.draw()
   canon2.draw()
@@ -41,7 +41,7 @@ function update() {
 }
 
 function start() {
-  interval = setInterval(update, 1000 / 60)
+  interval = setInterval(update, 1000 / 90)
 }
 
 function updateScore() {
@@ -136,7 +136,7 @@ class Bubble {
   }
 
   draw() {
-    this.y -= 0.4
+    this.y -= 2
     ctx.drawImage(this.imageRed, this.x, this.y, this.width, this.height)
   }
   float() {
@@ -162,21 +162,21 @@ class Bubble {
 }
 
 function generateBubble() {
-  let randomNumber = Math.floor(Math.random() * 200)
+  let randomNumber = Math.floor(Math.random() * 100)
   if (leftBubble.y <= 0) {
     if (frames % randomNumber === 0) {
       leftBubble.y = 630
     }
   }
 
-  let randomNumber2 = Math.floor(Math.random() * 150)
+  let randomNumber2 = Math.floor(Math.random() * 950)
   if (rightBubble.y <= 0) {
     if (frames % randomNumber2 === 0) {
       rightBubble.y = 630
     }
   }
 
-  let randomNumber3 = Math.floor(Math.random() * 100)
+  let randomNumber3 = Math.floor(Math.random() * 800)
   if (middleBubble.y <= 0) {
     if (frames % randomNumber3 === 0) {
       middleBubble.y = 630
@@ -256,8 +256,8 @@ class Star {
 }
 
 function generateStars() {
-  if (frames % 200 === 0) {
-    const starPositionY = Math.floor(Math.random() * 400)
+  if (frames % 180 === 0) {
+    const starPositionY = Math.floor(Math.random() * 100)
     stars.push(new Star(40, 40, 500, starPositionY))
   }
 }
@@ -312,7 +312,7 @@ class Character {
   constructor(x, y) {
     this.x = x
     this.y = y
-    this.fall = 0.5
+    this.fall = 2
     this.width = 120
     this.height = 120
     this.image = new Image()
@@ -390,8 +390,8 @@ document.onkeydown = e => {
       location.reload()
       break
 
-    // default:
-    //   break
+      // default:
+      //   break
   }
 }
 
@@ -423,10 +423,11 @@ function stopFall() {
     ) {
       player.fall = 0
     } else {
-      player.fall = 0.5
+      player.fall = 2
     }
   })
 }
+
 function finalScreen() {
   ctx.fillStyle = 'black'
   ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -464,15 +465,15 @@ const platform3 = new Platform(600, 150)
 const player = new Character(200, 140)
 const scoreB = new scoreBoard()
 
-setTimeout(function() {
+setTimeout(function () {
   platform.fall()
 }, 12000)
 
-setTimeout(function() {
+setTimeout(function () {
   platform2.fall()
 }, 6000)
 
-setTimeout(function() {
+setTimeout(function () {
   platform3.fall()
 }, 9000)
 
@@ -482,8 +483,8 @@ setTimeout(() => {
   })
 }, 100)
 
-window.onload =()=>{
-start()
+window.onload = () => {
+  start()
 }
 
 //startButton.onclick=start()
