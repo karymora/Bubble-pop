@@ -11,7 +11,7 @@ let stars = []
 function update() {
   frames++
   clearCanvas()
-  start()
+  
   board.draw()
   canon.draw()
   canon2.draw()
@@ -482,6 +482,8 @@ setTimeout(() => {
   })
 }, 100)
 
-update()
+window.onload =()=>{
+start()
+}
 
 //startButton.onclick=start()
